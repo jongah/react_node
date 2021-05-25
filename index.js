@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post('/register', (req, res) => {
+app.post('/api/user/register', (req, res) => {
   //클라이언트에서 보내주는 정보들을 가져온뒤 DB에 넣기
   const user = new User(req.body)
 
@@ -73,6 +73,18 @@ app.get('/api/users/auth', auth, (req, res) =>{
     email: req.user.email,
     name: req.user.name
   })
+})
+
+app.get('/api/users/logout', auth, (req, res)=>{
+  User.findOneAndUpdate({ _id:req.user._id},
+    { token: ""}
+    , (err, user) =>{
+      if(err) return res.json({ success: false, err});
+      return res.status(200).send({
+        success:true
+      })
+    }
+    )
 })
 
 
